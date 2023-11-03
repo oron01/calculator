@@ -74,7 +74,8 @@
     flex-wrap: wrap;
     text-align: center;
     align-content: stretch;
-    gap: 1%;
+    gap: 1% 4%;
+
 }
 
 #numButtonContainer > div {

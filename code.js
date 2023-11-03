@@ -2,7 +2,9 @@
 // let operator = null
 // let secondOperand = null
 // let result = null
-let operationStorageArray = [null,null,null,null] //the above condensed
+let operationStorageArray = [null,null,null,null,null] //the above condensed
+let decimalMode = false
+let currentPosition
 
 let numButtonContainer = document.querySelector("#numButtonContainer") 
 let operatorButtonContainer = document.querySelector("#operatorButtonContainer")
@@ -21,7 +23,7 @@ let calculator = {
         {id:"-",function: function (a,b){return +a - +b}},
         {id:"/",function: function (a,b){return +a / +b }},
         {id:"*",function: function (a,b){return +a * +b}},
-        
+        {id:"=",function: function (a,b){return calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])}},
     ],
 
 }
@@ -41,7 +43,7 @@ let addNumButton = () => {
 }
 
 let addOperatorButton = () => {
-    let operatorArray = ["+","-","*","/"]
+    let operatorArray = ["+","-","*","/","=","AC"]
     let operatorNameArray = ["add","subtract","multiply","divide"]
     for (i = 0; i < operatorArray.length; i++) 
     {let b = document.createElement("div")
@@ -67,32 +69,59 @@ let displayOperands = () => {
     displayText.textContent = `FirstOP: ${operationStorageArray[0]} Operator: ${operationStorageArray[1]} SecondOp: ${operationStorageArray[2]} Result: ${operationStorageArray[3]}` 
 }
 
-getInput = (e) => {
+let getInput = (e) => {
     alert(e.currentTarget.id)
     return (e.currentTarget.id)
 }
 
-setNewInput = (input) => {
-    if (input < 10) {//Input is a number
-        if (operationStorageArray[0] == null) {operationStorageArray[0] = input}
-        else if (operationStorageArray[2] == null && operationStorageArray[1] !== null) {
+let getCurrentPosition = () => {
+    if (operationStorageArray[0] == null) {return "firstOp"}
+    else if (operationStorageArray[1] == null) {return "Operator"}
+    else if (operationStorageArray[2] == null) {return "secondOp"}
+}
+
+let temporary0outcomeContainer = () => {
+    if (operationStorageArray[2] == 0 && operationStorageArray[1] == "/") {
+        displayText.textContent = "Nice try, Pal."
+        errorSwitch = true
+        operationStorageArray = resetValues()
+    }
+}
+
+let temporaryCalculatorFunctionContainer = () => {
+    operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
+}
+
+let setNewInput = (input) => {
+    currentPosition = getCurrentPosition()
+    if (input == "AC") {
+        return operationStorageArray = resetValues()}
+    else if (input < 10) {//Input is a number
+        if (getCurrentPosition() == "firstOp") {operationStorageArray[0] = input
+        operationStorageArray[3] = null}
+        else if (getCurrentPosition() == "secondOp") {
             operationStorageArray[2] = input
-            if (operationStorageArray[2] == 0 && operationStorageArray[1] == "/") {
-                displayText.textContent = "Nice try, Pal."
-                errorSwitch = true
-                operationStorageArray = resetValues()
-            }
-            else{operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])}
         }
         else {alert("try again")}
     } 
     else {//input is not a number
-        if (operationStorageArray[0] !== null) {operationStorageArray[1] = input} 
-        if (operationStorageArray[3] !==null) {
+        if (operationStorageArray[0] !== null && input !== "=") {operationStorageArray[1] = input} 
+        else if (operationStorageArray[2] !== null) {
+            if (input == "=") {
+                operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
+                operationStorageArray[0] = operationStorageArray[1] = operationStorageArray[2] = null
+            }
+            else {
+            operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
             operationStorageArray[0] = operationStorageArray[3]
-            operationStorageArray[3] = null
+            operationStorageArray[2],operationStorageArray[3] = null
             operationStorageArray[1] = input
-            operationStorageArray[2] = null
+            }
+        }
+        else if (operationStorageArray[3] !== null) {
+            operationStorageArray[0] = operationStorageArray[3]
+            operationStorageArray[1] = input
+            operationStorageArray[2], operationStorageArray[3] = null
         }
 
     }
