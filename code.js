@@ -109,7 +109,7 @@ let setNewInput = (input) => {
         else {alert("try again")}
     } 
     else {//input is not a number
-        if (operationStorageArray[0] !== null && input !== "=") {operationStorageArray[1] = input} 
+        if (operationStorageArray[0] !== null && input !== "=" && operationStorageArray[2] == null) {operationStorageArray[1] = input} 
         else if (operationStorageArray[2] !== null) {
             if (input == "=") {
                 operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
@@ -118,7 +118,7 @@ let setNewInput = (input) => {
             else {
             operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
             operationStorageArray[0] = operationStorageArray[3]
-            operationStorageArray[2],operationStorageArray[3] = null
+            operationStorageArray[2] = null
             operationStorageArray[1] = input
             }
         }
@@ -127,7 +127,6 @@ let setNewInput = (input) => {
             operationStorageArray[1] = input
             operationStorageArray[2], operationStorageArray[3] = null
         }
-
     }
 
     // if (firstOperand == null && firstOperand < 10) {firstOperand = input}
