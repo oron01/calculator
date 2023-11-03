@@ -1,15 +1,17 @@
-let firstOperand = null
-let operator = null
-let secondOperand = null
-let result = null
+// let firstOperand = null
+// let operator = null
+// let secondOperand = null
+// let result = null
+let operationStorageArray = [null,null,null,null] //the above condensed
 
 let numButtonContainer = document.querySelector("#numButtonContainer") 
 let operatorButtonContainer = document.querySelector("#operatorButtonContainer")
 
+let errorSwitch = false
+
 let calculator = {
     calculate(a,operator,b) {
         let operation = this.operations.find((element) => element.id == operator)
-        console.log(operation)
         let result = operation.function(a,b)
         return result
         
@@ -53,32 +55,69 @@ let addOperatorButton = () => {
 }
 }
 
-let displayOperands = () => {
-    let displayText = document.querySelector('#displayText')
-    displayText.textContent = `FirstOP: ${firstOperand} SecondOp: ${secondOperand}` 
+let resetValues = () => {
+    let a = operationStorageArray.map(() => null) 
+    return a
 }
 
-getClickedValue = (e) => {
+let displayOperands = () => {
+    if (errorSwitch == true) {errorSwitch = false
+    return}
+    let displayText = document.querySelector('#displayText')
+    displayText.textContent = `FirstOP: ${operationStorageArray[0]} Operator: ${operationStorageArray[1]} SecondOp: ${operationStorageArray[2]} Result: ${operationStorageArray[3]}` 
+}
+
+getInput = (e) => {
     alert(e.currentTarget.id)
+    return (e.currentTarget.id)
 }
 
 setNewInput = (input) => {
-    if (firstOperand == null && firstOperand < 10) {firstOperand = input}
-    else if (firstOperand !== null && operator == null) {
-        if (!(input < 10)) {operator = input}
+    if (input < 10) {//Input is a number
+        if (operationStorageArray[0] == null) {operationStorageArray[0] = input}
+        else if (operationStorageArray[2] == null && operationStorageArray[1] !== null) {
+            operationStorageArray[2] = input
+            if (operationStorageArray[2] == 0 && operationStorageArray[1] == "/") {
+                displayText.textContent = "Nice try, Pal."
+                errorSwitch = true
+                operationStorageArray = resetValues()
+            }
+            else{operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])}
+        }
+        else {alert("try again")}
+    } 
+    else {//input is not a number
+        if (operationStorageArray[0] !== null) {operationStorageArray[1] = input} 
+        if (operationStorageArray[3] !==null) {
+            operationStorageArray[0] = operationStorageArray[3]
+            operationStorageArray[3] = null
+            operationStorageArray[1] = input
+            operationStorageArray[2] = null
+        }
+
     }
-    else if (secondOperand == null || secondOperand < 10) { 
-        secondOperand = input
-        result = calculator.calculate(firstOperand,operator,secondOperand)
-        firstOperand, operator, secondOperand = null
-    }
+
+    // if (firstOperand == null && firstOperand < 10) {firstOperand = input}
+    // else if (firstOperand !== null && operator == null) {
+    //     if (!(input < 10)) {operator = input}
+    // }
+    // else if (secondOperand == null || secondOperand < 10) { 
+    //     secondOperand = input
+    //     result = calculator.calculate(firstOperand,operator,secondOperand)
+    //     firstOperand, operator, secondOperand = null
+    // }
     
-    else {alert("Try again")}
+    // else {alert("Try again")}
+}
+
+let operateCalculator = (e) => {
+    setNewInput(getInput(e))
+    displayOperands()
 }
 
 setButtonEventListeners = () => {
     let allButtons = document.querySelectorAll('.button')
-    allButtons.forEach((button) => {button.addEventListener("click",getClickedValue)})
+    allButtons.forEach((button) => {button.addEventListener("click",operateCalculator)})
 }
 
 
