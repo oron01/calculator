@@ -1,8 +1,22 @@
-let firstOperand
-let secondOperand
+let firstOperand = null
+let operator = null
+let secondOperand = null
+let result = null
 
 let numButtonContainer = document.querySelector("#numButtonContainer") 
 let operatorButtonContainer = document.querySelector("#operatorButtonContainer")
+
+let calculator = {
+    calculate() {},
+    operations: [
+        {id:"+",func(a,b){return +a + +b}},
+        {id:"-",func(a,b){return +a - +b}},
+        {id:"/",func(a,b){return +a / +b }},
+        {id:"*",func(a,b){return +a * +b}},
+        
+    ],
+
+}
 
 let addNumButton = () => {
     for (i = 9; i > -2; i--) 
@@ -14,20 +28,22 @@ let addNumButton = () => {
     c.textContent = i
     b.id = c.textContent
     b.appendChild(c)
-    b.className += "button number"
+    b.className += "button operand"
 }
 }
 
 let addOperatorButton = () => {
     let operatorArray = ["+","-","*","/"]
+    let operatorNameArray = ["add","subtract","multiply","divide"]
     for (i = 0; i < operatorArray.length; i++) 
     {let b = document.createElement("div")
     operatorButtonContainer.appendChild(b)
     let c = document.createElement("h1")
     c.textContent = operatorArray[i]
     b.id = c.textContent
+    // b.id = operatorNameArray[i]
     b.appendChild(c)
-    b.className = "button operator"
+    b.className += "button operator"
 }
 }
 
@@ -37,7 +53,21 @@ let displayOperands = () => {
 }
 
 getClickedValue = (e) => {
-    alert(e.target.id)
+    alert(e.currentTarget.id)
+}
+
+setNewInput = (input) => {
+    if (firstOperand == null) {firstOperand = input}
+    else if (firstOperand !== null && operator == null) {
+        if (!(input < 10)) {operator = input}
+    }
+    else if (secondOperand == null || secondOperand < 10) { 
+        secondOperand = input
+        result = calculator.calculate(firstOperand,operator,secondOperand)
+        firstOperand, operator, secondOperand = null
+    }
+    
+    else {alert("Try again")}
 }
 
 setButtonEventListeners = () => {
@@ -48,5 +78,5 @@ setButtonEventListeners = () => {
 
 displayOperands()
 addNumButton()
-setButtonEventListeners()
 addOperatorButton()
+setButtonEventListeners()

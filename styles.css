@@ -93,6 +93,6 @@
     background-color: grey;
 }
 
-#numButtonContainer > div:hover {
+#numButtonContainer > div:hover, #operatorButtonContainer > div:hover {
 cursor: pointer;
 }
