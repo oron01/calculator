@@ -1,0 +1,98 @@
+* {
+    box-sizing: border-box
+}
+
+#calculatorContainer {
+    width: 75vh;
+    height: 75vh;
+    background-color: black;
+    margin: 12.5vh auto;
+    padding: 1vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#calculator {
+    background-color: red;
+    width: 90%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+}
+
+#calculator > * {
+    min-height: 0px;
+}
+
+#displayScreenContainer {
+    flex: 1 1 33%;
+    background-color: rgb(25, 25, 25);
+    padding: 5%;
+}
+
+#displayScreen {
+    background-color: rgb(255, 255, 255);
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#displayText {}
+
+
+#calculatorGap {
+    flex: 1 1 10%;
+    background-color: rgb(51, 51, 51);
+    height: 100%;
+
+    /* flex-grow: 0.4; */
+}
+
+#buttonContainer {
+    flex: 1 1 57%;
+    background-color: rgb(0, 0, 0) ;
+    height: 100%;
+    display: flex;
+    gap: 1%;
+}
+
+#numButtonContainer {
+    flex: 1;    
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    align-content: stretch;
+    gap: 1%;
+
+}
+#operatorButtonContainer {
+    flex: 0.35;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-align: center;
+    align-content: stretch;
+    gap: 1%;
+}
+
+#numButtonContainer > div {
+    flex: 1 1 32.5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+}
+
+#operatorButtonContainer > div {
+    flex: 1 1 24%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+}
+
+#numButtonContainer > div:hover {
+cursor: pointer;
+}
