@@ -7,12 +7,18 @@ let numButtonContainer = document.querySelector("#numButtonContainer")
 let operatorButtonContainer = document.querySelector("#operatorButtonContainer")
 
 let calculator = {
-    calculate() {},
+    calculate(a,operator,b) {
+        let operation = this.operations.find((element) => element.id == operator)
+        console.log(operation)
+        let result = operation.function(a,b)
+        return result
+        
+    },
     operations: [
-        {id:"+",func(a,b){return +a + +b}},
-        {id:"-",func(a,b){return +a - +b}},
-        {id:"/",func(a,b){return +a / +b }},
-        {id:"*",func(a,b){return +a * +b}},
+        {id:"+",function: function (a,b){return +a + +b}},
+        {id:"-",function: function (a,b){return +a - +b}},
+        {id:"/",function: function (a,b){return +a / +b }},
+        {id:"*",function: function (a,b){return +a * +b}},
         
     ],
 
@@ -57,7 +63,7 @@ getClickedValue = (e) => {
 }
 
 setNewInput = (input) => {
-    if (firstOperand == null) {firstOperand = input}
+    if (firstOperand == null && firstOperand < 10) {firstOperand = input}
     else if (firstOperand !== null && operator == null) {
         if (!(input < 10)) {operator = input}
     }
