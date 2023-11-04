@@ -100,7 +100,7 @@ let temporaryCalculatorFunctionContainer = () => {
 }
 
 let getContainsDot = (string) => {
-    if (string == null) {return  false}
+    if (string == null) {return false}
     if (string.includes(".")) {
         return true}
     else {
@@ -108,29 +108,33 @@ let getContainsDot = (string) => {
 }
 
 let getIsALegalEntry = (input) => {
+    if (input == "Del" || input == "AC") {return true}
     if (!(input < 10)) {
         if (calculator[getCurrentPosition()] !== null) {
-        if (calculator[getCurrentPosition()][0] == "-" && input !== ".")
+        if (calculator[getCurrentPosition()][0] == "-" && getCurrentPosition()[1] == null && input !== ".")
         {return false}}
     }
-    if (input == "-") {
-        if (calculator[getCurrentPosition()] === null) {return true}
-        else {return false}
-    }
-    else if (input == ".") {
+    if (input == ".") {
         if (getContainsDot(calculator[getCurrentPosition()])) {return false}
         else {return true}
     }
+    else if (input == "-") {
+        if (calculator[getCurrentPosition[0]] == "-") {return false}
+        else {return true}
+    }
     else if (input == "=") {
-        if (calculator.firstOp && calculator.secondOp && calculator.operator && calculator.secondOp !== "-")
+        if (calculator.secondOp !== "-")
         {return true}
         else {return false}
     }
-    else return true
+    return true
 }
 
 let setNewInput = (input) => {
+    if (getIsALegalEntry(input)) {
+
     if (input == "AC") {resetValues()}
+
     else if (input == "Del") {
         if (calculator.secondOp !== null) {
             calculator.secondOp = calculator.secondOp.slice(0,-1)
@@ -147,55 +151,60 @@ let setNewInput = (input) => {
         }
 
     }
-    else if (input <10 || input == "." || input == "-") { //input is a number or (./-)
-        // if (input == "-" && calculator.result !== null) {
-            
-        // }
-        if (getIsALegalEntry(input)) {
-            if (input == ".") {
-                if (calculator[getCurrentPosition()] == "-") {
-                    calculator[getCurrentPosition()] += "0."
-                }
-                else if (calculator.result !== null || calculator[getCurrentPosition() == null]) {
-                    calculator[getCurrentPosition()] = "0."
-                    calculator.result = null
-                }
-                else {calculator[getCurrentPosition()] += "."}
+
+    else if (input <10) { //input is a number
+            if (calculator[getCurrentPosition()] == null) {calculator[getCurrentPosition()] = input}
+            else if (calculator[getCurrentPosition()] !== "0" && calculator[getCurrentPosition()] !== "-0") {calculator[getCurrentPosition()] += input}
+            calculator.result = null
+
+    }
+
+    else if (input == "-" || input == ".") {
+        if (input == ".") {
+            if (calculator[getCurrentPosition()] == "-") {
+                calculator[getCurrentPosition()] += "0."
             }
-            else if (calculator[getCurrentPosition()] == null) {calculator[getCurrentPosition()] = input}
-            else {calculator[getCurrentPosition()] += input}
-        }  
+            else if (calculator[getCurrentPosition()] == null) {
+                calculator[getCurrentPosition()] = "0."
+                if (calculator.result !== null) {calculator.result = null}
+            }
+            else {calculator[getCurrentPosition()] += "."}
+        }
+
         else if (input == "-") {
             if (calculator.result !== null) {
                 calculator.firstOp = calculator.result
                 calculator.operator = input
-            }
-            else if (calculator.secondOp !== null && calculator.secondOp !== "-") {
+                calculator.result = null
+            } //clean until here
+
+            else if (calculator.secondOp !== null) {
                 calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
                 calculator.firstOp = calculator.result
                 calculator.operator = input
                 calculator.result = calculator.secondOp = null                
             }
-            else if (calculator.firstOp !== null && calculator.firstOp !== "-") {
-                calculator.operator = input
 
+/// for deletion, i don't think necessary            else if (calculator.operator == null) {calculator.operator == input}
+// aaa
+            else if (calculator.firstOp !== null && calculator.firstOp !== "-" && calculator.operator == null) {
+                calculator.operator = input
             }
+            else if (calculator[getCurrentPosition()] == null) {calculator[getCurrentPosition()] = "-"}
 
         }
+
     }
     else { //input is an operator
-        if (getIsALegalEntry) {
             if (input == "=") {
                 calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
                 calculator.firstOp = calculator.secondOp = calculator.operator = null
                 return
             }
-            if (calculator.firstOp == null) {
-                if (calculator.result !== null) {
+            if (calculator.firstOp == null && calculator.result !== null) {
                     calculator.firstOp = calculator.result
                     calculator.result = calculator.secondOp = null
                     calculator.operator = input
-                }
             }
             else if (calculator.operator == null) {
                 calculator.operator = input
@@ -206,8 +215,7 @@ let setNewInput = (input) => {
                 calculator.secondOp = calculator.operation = calculator.result = null
             }
         }
-
-    }
+}
 }
 
 let setNewInputDefunct = (input) => {
