@@ -29,25 +29,37 @@
     flex: 1 1 33%;
     background-color: rgb(25, 25, 25);
     padding: 5%;
+    background-color: black;
+    background-color: grey;
+
+
 }
 
 #displayScreen {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(10, 10, 10);
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#displayText {}
+#displayText {
+    word-wrap: break-word;
+    text-wrap: wrap;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    color: green;
+}
 
 
 #calculatorGap {
     flex: 1 1 10%;
     background-color: rgb(51, 51, 51);
     height: 100%;
+background-color: black;
 
-    /* flex-grow: 0.4; */
+/* flex-grow: 0.4; */
 }
 
 #buttonContainer {
@@ -96,4 +108,18 @@
 
 #numButtonContainer > div:hover, #operatorButtonContainer > div:hover {
 cursor: pointer;
+}
+
+.button {
+    box-shadow: 0px 0px 10px 10px black;
+    border-radius: 25px;
+}
+
+.button.operand:hover {
+    background-color: red !important;
+}
+
+.button.operator:hover {
+    background-color: rgb(55, 0, 255) !important;
+
 }

@@ -17,7 +17,8 @@ let addKeyboardEventListeners = () => {
         let keyPressed = e.key
         if (e.key == "Enter") {keyPressed = "="}
         else if (e.key == "Backspace") {keyPressed = "Del"}
-        if (accepted.includes(keyPressed) || (keyPressed > -1 && keyPressed < 10)) {keyboardOperateCalculator(keyPressed)
+        if (accepted.includes(keyPressed) || (keyPressed > -1 && keyPressed !== " " && keyPressed < 10)) {
+            keyboardOperateCalculator(keyPressed)
         }    
     })
 }
@@ -91,7 +92,7 @@ let displayOperands = () => {
 }
 
 let getInput = (e) => {
-    alert(e.currentTarget.id)
+    // alert(e.currentTarget.id)
     return (e.currentTarget.id)
 }
 
@@ -138,7 +139,7 @@ let getIsALegalEntry = (input) => {
         else {return true}
     }
     else if (input == "=") {
-        if (calculator.secondOp !== "-")
+        if (calculator.secondOp !== "-" && calculator.secondOp !== null)
         {return true}
         else {return false}
     }
