@@ -48,7 +48,7 @@ let addNumButton = () => {
 }
 
 let addOperatorButton = () => {
-    let operatorArray = ["+","-","*","/","=","AC"]
+    let operatorArray = ["+","-","*","/","=","AC","Del"]
     let operatorNameArray = ["add","subtract","multiply","divide"]
     for (i = 0; i < operatorArray.length; i++) 
     {let b = document.createElement("div")
@@ -131,16 +131,32 @@ let getIsALegalEntry = (input) => {
 
 let setNewInput = (input) => {
     if (input == "AC") {resetValues()}
+    else if (input == "Del") {
+        if (calculator.secondOp !== null) {
+            calculator.secondOp = calculator.secondOp.slice(0,-1)
+            if (calculator.secondOp == "") {calculator.secondOp = null}
+        }
+
+        else if (calculator.operator !== null) {
+            calculator.operator = null
+        }
+
+        else if (calculator.firstOp !== null) {
+            calculator.firstOp = calculator.firstOp.slice(0,-1)
+            if (calculator.firstOp == "") {calculator.firstOp = null}
+        }
+
+    }
     else if (input <10 || input == "." || input == "-") { //input is a number or (./-)
         // if (input == "-" && calculator.result !== null) {
             
         // }
         if (getIsALegalEntry(input)) {
             if (input == ".") {
-                if (calculator[getCurrentPosition()] == "null" || calculator[getCurrentPosition()] == "-") {
+                if (calculator[getCurrentPosition()] == "-") {
                     calculator[getCurrentPosition()] += "0."
                 }
-                else if (calculator.result !== null) {
+                else if (calculator.result !== null || calculator[getCurrentPosition() == null]) {
                     calculator[getCurrentPosition()] = "0."
                     calculator.result = null
                 }
