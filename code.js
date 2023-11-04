@@ -23,8 +23,13 @@ let calculator = {
         {id:"-",function: function (a,b){return +a - +b}},
         {id:"/",function: function (a,b){return +a / +b }},
         {id:"*",function: function (a,b){return +a * +b}},
-        {id:"=",function: function (a,b){return calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])}},
+        {id:"=",function: function (a,b){return calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)}},
     ],
+    firstOp : null,
+    operator : null,
+    secondOp : null,
+    result:null
+
 
 }
 
@@ -58,7 +63,8 @@ let addOperatorButton = () => {
 }
 
 let resetValues = () => {
-    let a = operationStorageArray.map(() => null) 
+    let a = calculator
+    calculator.firstOp = calculator.operator = calculator.secondOp = calculator.result = null 
     return a
 }
 
@@ -66,7 +72,7 @@ let displayOperands = () => {
     if (errorSwitch == true) {errorSwitch = false
     return}
     let displayText = document.querySelector('#displayText')
-    displayText.textContent = `FirstOP: ${operationStorageArray[0]} Operator: ${operationStorageArray[1]} SecondOp: ${operationStorageArray[2]} Result: ${operationStorageArray[3]}` 
+    displayText.textContent = `FirstOP: ${calculator.firstOp} Operator: ${calculator.operator} SecondOp: ${calculator.secondOp} Result: ${calculator.result}` 
 }
 
 let getInput = (e) => {
@@ -75,71 +81,156 @@ let getInput = (e) => {
 }
 
 let getCurrentPosition = () => {
-    if (operationStorageArray[0] == null || operationStorageArray[0] == "-") {return "firstOp"}
-    else if (operationStorageArray[1] == null) {return "firstOp"}
-    else if (operationStorageArray[1] !== null) {return "secondOp"}
-else {return "secondOp"}
+    if (calculator.firstOp == null || calculator.firstOp == "-") {return "firstOp"}
+    else if (calculator.operator == null) {return "firstOp"}
+    else if (calculator.operator !== null) {return "secondOp"}
+    else {return "secondOp"}
 }
 
 let temporary0outcomeContainer = () => {
-    if (operationStorageArray[2] == 0 && operationStorageArray[1] == "/") {
+    if (calculator.secondOp == 0 && calculator.operator == "/") {
         displayText.textContent = "Nice try, Pal."
         errorSwitch = true
-        operationStorageArray = resetValues()
+        calculator = resetValues() // not necessary cuz obj right?
     }
 }
 
 let temporaryCalculatorFunctionContainer = () => {
-    operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
+    calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
 }
 
 let getContainsDot = (string) => {
     if (string == null) {return  false}
     if (string.includes(".")) {
-        alert("obama")
         return true}
     else {
-        alert("nobama")
         return false}
 }
 
+let getIsALegalEntry = (input) => {
+    if (!(input < 10)) {
+        if (calculator[getCurrentPosition()] !== null) {
+        if (calculator[getCurrentPosition()][0] == "-" && input !== ".")
+        {return false}}
+    }
+    if (input == "-") {
+        if (calculator[getCurrentPosition()] === null) {return true}
+        else {return false}
+    }
+    else if (input == ".") {
+        if (getContainsDot(calculator[getCurrentPosition()])) {return false}
+        else {return true}
+    }
+    else if (input == "=") {
+        if (calculator.firstOp && calculator.secondOp && calculator.operator && calculator.secondOp !== "-")
+        {return true}
+        else {return false}
+    }
+    else return true
+}
+
 let setNewInput = (input) => {
+    if (input == "AC") {resetValues()}
+    else if (input <10 || input == "." || input == "-") { //input is a number or (./-)
+        // if (input == "-" && calculator.result !== null) {
+            
+        // }
+        if (getIsALegalEntry(input)) {
+            if (input == ".") {
+                if (calculator[getCurrentPosition()] == "null" || calculator[getCurrentPosition()] == "-") {
+                    calculator[getCurrentPosition()] += "0."
+                }
+                else if (calculator.result !== null) {
+                    calculator[getCurrentPosition()] = "0."
+                    calculator.result = null
+                }
+                else {calculator[getCurrentPosition()] += "."}
+            }
+            else if (calculator[getCurrentPosition()] == null) {calculator[getCurrentPosition()] = input}
+            else {calculator[getCurrentPosition()] += input}
+        }  
+        else if (input == "-") {
+            if (calculator.result !== null) {
+                calculator.firstOp = calculator.result
+                calculator.operator = input
+            }
+            else if (calculator.secondOp !== null && calculator.secondOp !== "-") {
+                calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
+                calculator.firstOp = calculator.result
+                calculator.operator = input
+                calculator.result = calculator.secondOp = null                
+            }
+            else if (calculator.firstOp !== null && calculator.firstOp !== "-") {
+                calculator.operator = input
+
+            }
+
+        }
+    }
+    else { //input is an operator
+        if (getIsALegalEntry) {
+            if (input == "=") {
+                calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
+                calculator.firstOp = calculator.secondOp = calculator.operator = null
+                return
+            }
+            if (calculator.firstOp == null) {
+                if (calculator.result !== null) {
+                    calculator.firstOp = calculator.result
+                    calculator.result = calculator.secondOp = null
+                    calculator.operator = input
+                }
+            }
+            else if (calculator.operator == null) {
+                calculator.operator = input
+            }
+            else if (calculator.secondOp !== null) {
+                calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
+                calculator.firstOp = calculator.result
+                calculator.secondOp = calculator.operation = calculator.result = null
+            }
+        }
+
+    }
+}
+
+let setNewInputDefunct = (input) => {
     currentPosition = getCurrentPosition()
     if (input == "AC") {
         return operationStorageArray = resetValues()}
-    else if (input < 10 || (input == "." && !getContainsDot(operationStorageArray[0])) || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
+    else if (input < 10 || (input == "." && !getContainsDot(calculator.firstOp)) || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
         if (getCurrentPosition() == "firstOp") {
-            if (operationStorageArray[0] == null && input !== ".") {operationStorageArray[0] = input}
-            else if (operationStorageArray[0] == "-" && input !== ".") {operationStorageArray[0] += input}
-            else if ((operationStorageArray[0] == null || operationStorageArray[0] == "-") && input == ".") {operationStorageArray[0] += "0."}
-            else {operationStorageArray[0] += input}
-        operationStorageArray[3] = null}
+            if (calculator.firstOp == null && input !== ".") {calculator.firstOp = input}
+            else if (calculator.firstOp == "-" && input !== ".") {calculator.firstOp += input}
+            else if ((calculator.firstOp == null || calculator.firstOp == "-") && input == ".") {calculator.firstOp += "0."}
+            else {calculator.firstOp += input}
+        calculator.result = null}
         else if (getCurrentPosition() == "secondOp") {
-            if (operationStorageArray[2] == null && input !== ".") {operationStorageArray[2] = input}
-            else if (operationStorageArray[0] == "-" && input !== ".") {operationStorageArray[0] += input}
-            else if ((operationStorageArray[2] == null || operationStorageArray[2] == "-") && input == ".") {operationStorageArray[2] += "0."}
-            else {operationStorageArray[2] += input}
+            if (calculator.secondOp == null && input !== ".") {calculator.secondOp = input}
+            else if (calculator.firstOp == "-" && input !== ".") {calculator.firstOp += input}
+            else if ((calculator.secondOp == null || calculator.secondOp == "-") && input == ".") {calculator.secondOp += "0."}
+            else {calculator.secondOp += input}
         }
         else {alert("try again")}
     } 
     else {//input is not a number
-        if (operationStorageArray[0] !== null && input !== "=" && operationStorageArray[2] == null && input !== ".") {operationStorageArray[1] = input} 
-        else if (operationStorageArray[2] !== null) {
+        if (calculator.firstOp !== null && input !== "=" && calculator.secondOp == null && input !== ".") {calculator.operator = input} 
+        else if (calculator.secondOp !== null) {
             if (input == "=") {
-                operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
-                operationStorageArray[0] = operationStorageArray[1] = operationStorageArray[2] = null
+                calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
+                calculator.firstOp = calculator.operator = calculator.secondOp = null
             }
             else {
-            operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
-            operationStorageArray[0] = operationStorageArray[3]
-            operationStorageArray[2] = operationStorageArray[3] = null
-            operationStorageArray[1] = input
+            calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
+            calculator.firstOp = calculator.result
+            calculator.secondOp = calculator.result = null
+            calculator.operator = input
             }
         }
-        else if (operationStorageArray[3] !== null) {
-            operationStorageArray[0] = operationStorageArray[3]
-            operationStorageArray[1] = input
-            operationStorageArray[2], operationStorageArray[3] = null
+        else if (calculator.result !== null) {
+            calculator.firstOp = calculator.result
+            calculator.operator = input
+            calculator.secondOp, calculator.result = null
         }
     }
 
