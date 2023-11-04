@@ -11,6 +11,17 @@ let operatorButtonContainer = document.querySelector("#operatorButtonContainer")
 
 let errorSwitch = false
 
+let addKeyboardEventListeners = () => {
+    let accepted = ["Del","-","+","/","*","Backspace",".","=","Enter"]
+    document.body.addEventListener("keydown",(e) => {
+        let keyPressed = e.key
+        if (e.key == "Enter") {keyPressed = "="}
+        else if (e.key == "Backspace") {keyPressed = "Del"}
+        if (accepted.includes(keyPressed) || (keyPressed > -1 && keyPressed < 10)) {keyboardOperateCalculator(keyPressed)
+        }    
+    })
+}
+
 let calculator = {
     calculate(a,operator,b) {
         let operation = this.operations.find((element) => element.id == operator)
@@ -72,7 +83,11 @@ let displayOperands = () => {
     if (errorSwitch == true) {errorSwitch = false
     return}
     let displayText = document.querySelector('#displayText')
-    displayText.textContent = `FirstOP: ${calculator.firstOp} Operator: ${calculator.operator} SecondOp: ${calculator.secondOp} Result: ${calculator.result}` 
+    let roundedResult = calculator.result
+    if (calculator.result !== null) {roundedResult = Number(calculator.result)
+    roundedResult = roundedResult.toFixed(4)}
+    let content = () => roundedResult !== null ? roundedResult : calculator.secondOp !== null ? calculator.secondOp : calculator.operator !== null ? calculator.operator : calculator.firstOp !== null ? calculator.firstOp : "Go ahead..." 
+    displayText.textContent = content() 
 }
 
 let getInput = (e) => {
@@ -195,11 +210,16 @@ let setNewInput = (input) => {
     }
     else { //input is an operator
             if (input == "=") {
+                if (calculator.operator == "/" && calculator.secondOp == "0" ) {
+                displayText.textContent = "Nice Try Pal"
+                errorSwitch = true
+                resetValues() 
+                }
+                else{
                 calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
-                calculator.firstOp = calculator.secondOp = calculator.operator = null
-                return
+                calculator.firstOp = calculator.secondOp = calculator.operator = null}
             }
-            if (calculator.firstOp == null && calculator.result !== null) {
+            else if (calculator.firstOp == null && calculator.result !== null) {
                     calculator.firstOp = calculator.result
                     calculator.result = calculator.secondOp = null
                     calculator.operator = input
@@ -208,9 +228,16 @@ let setNewInput = (input) => {
                 calculator.operator = input
             }
             else if (calculator.secondOp !== null) {
+                if (calculator.operator == "/" && calculator.secondOp == "0" ) {
+                    displayText.textContent = "Nice Try Pal"
+                    errorSwitch = true
+                    resetValues() 
+                    }
+                    else{
                 calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
                 calculator.firstOp = calculator.result
                 calculator.secondOp = calculator.operation = calculator.result = null
+                    }
             }
         }
 }
@@ -218,6 +245,11 @@ let setNewInput = (input) => {
 
 let operateCalculator = (e) => {
     setNewInput(getInput(e))
+    displayOperands()
+}
+
+let keyboardOperateCalculator = (input) => {
+    setNewInput(input)
     displayOperands()
 }
 
@@ -231,3 +263,5 @@ displayOperands()
 addNumButton()
 addOperatorButton()
 setButtonEventListeners()
+addKeyboardEventListeners()
+
