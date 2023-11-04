@@ -94,15 +94,20 @@ let temporaryCalculatorFunctionContainer = () => {
 }
 
 let getContainsDot = (string) => {
-    if (string.includes(".")) {return true}
-    else {return false}
+    if (string == null) {return  false}
+    if (string.includes(".")) {
+        alert("obama")
+        return true}
+    else {
+        alert("nobama")
+        return false}
 }
 
 let setNewInput = (input) => {
     currentPosition = getCurrentPosition()
     if (input == "AC") {
         return operationStorageArray = resetValues()}
-    else if (input < 10 || input == "." || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
+    else if (input < 10 || (input == "." && !getContainsDot(operationStorageArray[0])) || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
         if (getCurrentPosition() == "firstOp") {
             if (operationStorageArray[0] == null && input !== ".") {operationStorageArray[0] = input}
             else if (operationStorageArray[0] == "-" && input !== ".") {operationStorageArray[0] += input}
@@ -118,7 +123,7 @@ let setNewInput = (input) => {
         else {alert("try again")}
     } 
     else {//input is not a number
-        if (operationStorageArray[0] !== null && input !== "=" && operationStorageArray[2] == null) {operationStorageArray[1] = input} 
+        if (operationStorageArray[0] !== null && input !== "=" && operationStorageArray[2] == null && input !== ".") {operationStorageArray[1] = input} 
         else if (operationStorageArray[2] !== null) {
             if (input == "=") {
                 operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
