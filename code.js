@@ -75,7 +75,7 @@ let getInput = (e) => {
 }
 
 let getCurrentPosition = () => {
-    if (operationStorageArray[0] == null) {return "firstOp"}
+    if (operationStorageArray[0] == null || operationStorageArray[0] == "-") {return "firstOp"}
     else if (operationStorageArray[1] == null) {return "firstOp"}
     else if (operationStorageArray[1] !== null) {return "secondOp"}
 else {return "secondOp"}
@@ -93,17 +93,26 @@ let temporaryCalculatorFunctionContainer = () => {
     operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
 }
 
+let getContainsDot = (string) => {
+    if (string.includes(".")) {return true}
+    else {return false}
+}
+
 let setNewInput = (input) => {
     currentPosition = getCurrentPosition()
     if (input == "AC") {
         return operationStorageArray = resetValues()}
-    else if (input < 10 || input == ".") {//Input is a number
+    else if (input < 10 || input == "." || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
         if (getCurrentPosition() == "firstOp") {
-            if (operationStorageArray[0] == null) {operationStorageArray[0] = input}
+            if (operationStorageArray[0] == null && input !== ".") {operationStorageArray[0] = input}
+            else if (operationStorageArray[0] == "-" && input !== ".") {operationStorageArray[0] += input}
+            else if ((operationStorageArray[0] == null || operationStorageArray[0] == "-") && input == ".") {operationStorageArray[0] += "0."}
             else {operationStorageArray[0] += input}
         operationStorageArray[3] = null}
         else if (getCurrentPosition() == "secondOp") {
-            if (operationStorageArray[2] == null) {operationStorageArray[2] = input}
+            if (operationStorageArray[2] == null && input !== ".") {operationStorageArray[2] = input}
+            else if (operationStorageArray[0] == "-" && input !== ".") {operationStorageArray[0] += input}
+            else if ((operationStorageArray[2] == null || operationStorageArray[2] == "-") && input == ".") {operationStorageArray[2] += "0."}
             else {operationStorageArray[2] += input}
         }
         else {alert("try again")}
@@ -118,7 +127,7 @@ let setNewInput = (input) => {
             else {
             operationStorageArray[3] = calculator.calculate(operationStorageArray[0],operationStorageArray[1],operationStorageArray[2])
             operationStorageArray[0] = operationStorageArray[3]
-            operationStorageArray[2] = null
+            operationStorageArray[2] = operationStorageArray[3] = null
             operationStorageArray[1] = input
             }
         }
