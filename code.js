@@ -176,7 +176,7 @@ let setNewInput = (input) => {
                 calculator.firstOp = calculator.result
                 calculator.operator = input
                 calculator.result = null
-            } //clean until here
+            } 
 
             else if (calculator.secondOp !== null) {
                 calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
@@ -185,8 +185,6 @@ let setNewInput = (input) => {
                 calculator.result = calculator.secondOp = null                
             }
 
-/// for deletion, i don't think necessary            else if (calculator.operator == null) {calculator.operator == input}
-// aaa
             else if (calculator.firstOp !== null && calculator.firstOp !== "-" && calculator.operator == null) {
                 calculator.operator = input
             }
@@ -216,59 +214,6 @@ let setNewInput = (input) => {
             }
         }
 }
-}
-
-let setNewInputDefunct = (input) => {
-    currentPosition = getCurrentPosition()
-    if (input == "AC") {
-        return operationStorageArray = resetValues()}
-    else if (input < 10 || (input == "." && !getContainsDot(calculator.firstOp)) || input == "-" && (getCurrentPosition() == "firstOp" || getCurrentPosition() == "secondOp")) {//Input is a number
-        if (getCurrentPosition() == "firstOp") {
-            if (calculator.firstOp == null && input !== ".") {calculator.firstOp = input}
-            else if (calculator.firstOp == "-" && input !== ".") {calculator.firstOp += input}
-            else if ((calculator.firstOp == null || calculator.firstOp == "-") && input == ".") {calculator.firstOp += "0."}
-            else {calculator.firstOp += input}
-        calculator.result = null}
-        else if (getCurrentPosition() == "secondOp") {
-            if (calculator.secondOp == null && input !== ".") {calculator.secondOp = input}
-            else if (calculator.firstOp == "-" && input !== ".") {calculator.firstOp += input}
-            else if ((calculator.secondOp == null || calculator.secondOp == "-") && input == ".") {calculator.secondOp += "0."}
-            else {calculator.secondOp += input}
-        }
-        else {alert("try again")}
-    } 
-    else {//input is not a number
-        if (calculator.firstOp !== null && input !== "=" && calculator.secondOp == null && input !== ".") {calculator.operator = input} 
-        else if (calculator.secondOp !== null) {
-            if (input == "=") {
-                calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
-                calculator.firstOp = calculator.operator = calculator.secondOp = null
-            }
-            else {
-            calculator.result = calculator.calculate(calculator.firstOp,calculator.operator,calculator.secondOp)
-            calculator.firstOp = calculator.result
-            calculator.secondOp = calculator.result = null
-            calculator.operator = input
-            }
-        }
-        else if (calculator.result !== null) {
-            calculator.firstOp = calculator.result
-            calculator.operator = input
-            calculator.secondOp, calculator.result = null
-        }
-    }
-
-    // if (firstOperand == null && firstOperand < 10) {firstOperand = input}
-    // else if (firstOperand !== null && operator == null) {
-    //     if (!(input < 10)) {operator = input}
-    // }
-    // else if (secondOperand == null || secondOperand < 10) { 
-    //     secondOperand = input
-    //     result = calculator.calculate(firstOperand,operator,secondOperand)
-    //     firstOperand, operator, secondOperand = null
-    // }
-    
-    // else {alert("Try again")}
 }
 
 let operateCalculator = (e) => {
